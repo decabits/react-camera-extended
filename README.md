@@ -1,88 +1,104 @@
-# React Camera [![Travis status build](https://travis-ci.org/Miniplop/react-camera.svg?branch=master)](https://travis-ci.org/Miniplop/react-camera/) [![npm version](https://badge.fury.io/js/react-camera.svg)](https://badge.fury.io/js/react-camera)
+# React Camera Extended [![Travis status build](https://travis-ci.org/decabits/react-camera-extended.svg?branch=master)](https://travis-ci.org/decabits/react-camera-extended/) [![npm version](https://badge.fury.io/js/react-camera-extended.svg)](https://badge.fury.io/js/react-camera-extended)
 
-The comprehensive camera module for React. Including photographs! (videos, and barcode scanning coming soon)
+Original Credits & Source Code From - [React Camera](https://github.com/Miniplop/react-camera)
+
+Camera Module with ability to -
+
+1. Take Photos.
+2. Swap Camera Interface on Mobile Devices.
 
 ## Getting started
 
-`npm install react-camera`
+`npm install react-camera-extended`
 
 or
 
-`yarn add react-camera`
+`yarn add react-camera-extended`
 
 ## Usage
 
 ```
-import React, { Component } from 'react';
-import Camera from 'react-camera';
+import Camera from 'react-camera-extended';
+// Use ExifOrientationImg to make sure image does not rotate due to Exif Rotation
+import ExifOrientationImg from 'react-exif-orientation-img';
 
-export default class App extends Component {
+export default class CameraInterface extends Component {
 
   constructor(props) {
     super(props);
-    this.takePicture = this.takePicture.bind(this);
+    this.takePicture = this.takePicture;
   }
 
-  takePicture() {
-    this.camera.capture()
-    .then(blob => {
-      this.img.src = URL.createObjectURL(blob);
-      this.img.onload = () => { URL.revokeObjectURL(this.src); }
-    })
+  componentDidMount() {
+    this.state = {
+      cameraState: 'open'
+    }
   }
+
+  takePicture = () => {
+    this.camera.src = this.camera.capture();
+    this.setState(({cameraState: 'preview'}));
+  };
 
   render() {
-    return (
-      <div style={style.container}>
-        <Camera
-          style={style.preview}
-          ref={(cam) => {
-            this.camera = cam;
-          }}
-        >
-          <div style={style.captureContainer} onClick={this.takePicture}>
-            <div style={style.captureButton} />
-          </div>
-        </Camera>
-        <img
-          style={style.captureImage}
-          ref={(img) => {
-            this.img = img;
-          }}
-        />
-      </div>
-    );
+    if (this.state.cameraState ==- 'preview') {
+      return(
+        <div>
+          <ExifOrientationImg className="camera-preview__image" src={this.props.src}/>
+        </div>
+      )
+    } else {
+      return (
+        <div className="camera-interface">
+          <Camera ref={(cam) => { this.camera = cam;}} tryRearCamera={true} />
+          <footer className="camera-interface__footer" >
+            <img src={RecordIcon}  className="camera-interface__footer__capture-button" onClick={this.takePicture} >
+            </img>
+          </footer>
+        </div>
+      );
+    }
   }
 }
-
-const style = {
-  preview: {
-    position: 'relative',
-  },
-  captureContainer: {
-    display: 'flex',
-    position: 'absolute',
-    justifyContent: 'center',
-    zIndex: 1,
-    bottom: 0,
-    width: '100%'
-  },
-  captureButton: {
-    backgroundColor: '#fff',
-    borderRadius: '50%',
-    height: 56,
-    width: 56,
-    color: '#000',
-    margin: 20
-  },
-  captureImage: {
-    width: '100%',
-  }
-};
 ```
 
-## Component instance methods
+## Available Props
 
-You can access component methods by adding a ref (ie. ref="camera") prop to your <Camera> element, then you can use this.refs.camera.capture(cb), etc. inside your component.
+- `video` - true if you just need any video source from device. You can set preference by referring [here](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia).
+- `audio` - true|false. False by default as we currently only support capture photo.
+- `styles` - To override default style use this prop. Default values -
 
-#### `capture(): Promise`
+  ```
+  {
+    video: {
+      minWidth: '100%',
+      minHeight: '100%',
+      width: 'auto',
+      height: 'auto',
+      position: 'absolute',
+      top: 0,
+      left: 0
+    },
+    videoContainer: {
+      position: 'absolute',
+      top: 0,
+      bottom: 0,
+      width: '100%',
+      height: '100%',
+      overflow: 'hidden'
+    }
+  }
+  ```
+
+- `tryRearCamera` - Set true if you intend to use this in mobile phone and want rear camera to load by default. Default - false
+
+## Methods
+
+Make sure to set camera reference like given in the example. Once you have `this.camera = ref`, you can use following methods -
+
+- `this.camera.capture()` - Captures the and returns image in data url format.
+- `this.camera.setVideoStream(tryRearCamera = true|false)` - Call this to toggle between front and rear camera.
+
+## Contribution
+
+Please fork the repository and open the pull request against master. Feel free to reach out to us at [info@decabits.com](mailto:info@decabits.com)
