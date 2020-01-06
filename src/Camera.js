@@ -152,10 +152,7 @@ Camera.propTypes = {
   audio: PropTypes.bool,
   video: PropTypes.oneOfType([PropTypes.bool, PropTypes.object]),
   children: PropTypes.element,
-  styles: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number
-  ]),
+  styles: PropTypes.objectOf(PropTypes.object()),
   tryRearCamera: PropTypes.bool
 };
 
