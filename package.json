@@ -1,6 +1,6 @@
 {
   "name": "react-camera-extended",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "license": "MIT",
   "description": "A Camera component for React with extended features like switch camera interface.",
   "repository": {

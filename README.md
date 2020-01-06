@@ -15,6 +15,10 @@ or
 
 `yarn add react-camera-extended`
 
+## Source Code & Demo
+
+Please it here here - [React Camera Extended](https://github.com/decabits/react-camera-extended)
+
 ## Usage
 
 ```
