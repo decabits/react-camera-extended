@@ -26,7 +26,6 @@ class Camera extends Component {
             this.video.srcObject = mediaStream;
             this.video.play();
             this.setState({ enabled: true });
-            this.enabled = true;
           } else {
             throw new Error('Video Tag not initialized');
           }
@@ -59,7 +58,6 @@ class Camera extends Component {
   }
 
   render() {
-    if (!this.state.enabled && this.enabled) { return; }
     const videoContainerStyle =
       window.Object.assign(
         {},
